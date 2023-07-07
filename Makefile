@@ -26,9 +26,5 @@ go.generate.gorilla:
 go.generate.fiber:
 	./scripts/generate-go-server.sh fiber
 
-.SILENT: go.generate.client
-go.generate.client:
-	@oapi-codegen -package "clientapi" -generate "types,client,spec" src/rest/swagger.yaml > "gen/rest/go/client/client.go"
-
 .SILENT: go.generate
-go.generate: go.generate.echo go.generate.chi go.generate.gin go.generate.gorilla go.generate.fiber go.generate.client
+go.generate: go.generate.echo go.generate.chi go.generate.gin go.generate.gorilla go.generate.fiber
