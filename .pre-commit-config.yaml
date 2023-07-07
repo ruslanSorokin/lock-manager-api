@@ -36,3 +36,10 @@ repos:
             style,
             test,
           ]
+
+  # pre-commit install
+  - repo: https://github.com/yoheimuta/protolint
+    rev: v0.45.0
+    hooks:
+      - id: protolint
+        args: [lint src/grpc]
