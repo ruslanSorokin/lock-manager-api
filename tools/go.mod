@@ -2,7 +2,11 @@ module github.com/ruslanSorokin/lock-manager-api/tools
 
 go 1.19
 
-require github.com/deepmap/oapi-codegen v1.13.0
+require (
+	github.com/deepmap/oapi-codegen v1.13.0
+	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.3.0
+	google.golang.org/protobuf v1.30.0
+)
 
 require (
 	github.com/getkin/kin-openapi v0.118.0 // indirect
