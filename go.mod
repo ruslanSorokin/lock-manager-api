@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/deepmap/oapi-codegen v1.13.0
 	github.com/getkin/kin-openapi v0.118.0
+	github.com/go-chi/chi/v5 v5.0.8
 	github.com/labstack/echo/v4 v4.10.2
 )
 
