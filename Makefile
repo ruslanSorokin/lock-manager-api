@@ -28,3 +28,23 @@ generate.go.rest.fiber:
 
 .SILENT: generate.go.rest
 generate.go.rest: generate.go.rest.echo generate.go.rest.chi generate.go.rest.gin generate.go.rest.gorilla generate.go.rest.fiber
+
+GEN_GO_PREFIX := gen/grpc/go
+SRC_PATH := src/grpc
+SRC_PROTO := $(shell find $(SRC_PATH) -iname "*.proto")
+
+.SILENT: generate.go.grpc
+generate.go.grpc:
+	@protoc \
+	--proto_path=$(SRC_PATH) \
+	\
+	--go_out=$(GEN_GO_PREFIX) \
+	--go-grpc_out=$(GEN_GO_PREFIX) \
+	\
+	--go_opt=paths=source_relative \
+	--go-grpc_opt=paths=source_relative \
+	$(SRC_PROTO)
+
+
+.SILENT: generate.go.
+generate.go: generate.go.rest generate.go.grpc
