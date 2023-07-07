@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package lock_manager;
+
+// LockReq is a request for Lock call.
+message LockReq{
+  // Required.
+  optional string resource_id = 1;
+}
+
+// LockRes is a response for LockReq.
+message LockRes{
+  // Error is a enum error.
+  enum Error{
+    ERR_UNSPECIFIED = 0;
+    // ERR_INVALID_RESOURCE_ID means resource_id violates one of its constraint
+    ERR_INVALID_RESOURCE_ID = 1;
+    // ERR_RESOURCE_ID_ALREADY_EXISTS means resource_id is already locked
+    ERR_RESOURCE_ID_ALREADY_EXISTS = 2;
+  }
+  repeated Error errors = 1;
+  // Required.
+  optional string token = 2;
+}
+
+// UnlockReq is a request for Unlock call.
+message UnlockReq{
+  // Required.
+  optional string resource_id = 1;
+  // Required.
+  optional string token = 2;
+}
+
+// UnlockRes is a response for UnlockReq.
+message UnlockRes{
+  // Error is a enum error.
+  enum Error{
+    ERR_UNSPECIFIED = 0;
+    // ERR_INVALID_TOKEN means token violates one of its constraint
+    ERR_INVALID_TOKEN = 1;
+    // ERR_WRONG_TOKEN means token doesn't fit
+    ERR_WRONG_TOKEN = 2;
+    // ERR_INVALID_RESOURCE_ID means resource_id violates one of its constraint
+    ERR_INVALID_RESOURCE_ID = 3;
+    // ERR_RESOURCE_ID_NOT_FOUND means resource_id was not found
+    ERR_RESOURCE_ID_NOT_FOUND = 4;
+  }
+  repeated Error errors = 1;
+  // Required.
+  optional string token = 2;
+}

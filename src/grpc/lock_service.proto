@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package lock_manager;
+
+import "transport.proto";
+
+// LockManagerService provides interprocess communication lock functionality.
+service LockManagerService {
+  // Lock locks resource and returns token that can be used to unlock it.
+  rpc Lock(LockReq) returns (LockRes);
+  // Unlock unlocks resource only if token fits.
+  rpc Unlock(UnlockReq) returns (UnlockRes);
+}
