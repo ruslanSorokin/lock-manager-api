@@ -6,25 +6,25 @@ tools.download:
 tools.install:
 	@cat tools/tools.go | grep _ | awk -F'"' '{print $$2}' | xargs -tI % go install %
 
-.SILENT: go.generate.echo
-go.generate.echo:
+.SILENT: generate.go.rest.echo
+generate.go.rest.echo:
 	./scripts/generate-go-server.sh echo
 
-.SILENT: go.generate.chi
-go.generate.chi:
+.SILENT: generate.go.rest.chi
+generate.go.rest.chi:
 	./scripts/generate-go-server.sh chi
 
-.SILENT: go.generate.gin
-go.generate.gin:
+.SILENT: generate.go.rest.gin
+generate.go.rest.gin:
 	./scripts/generate-go-server.sh gin
 
-.SILENT: go.generate.gorilla
-go.generate.gorilla:
+.SILENT: generate.go.rest.gorilla
+generate.go.rest.gorilla:
 	./scripts/generate-go-server.sh gorilla
 
-.SILENT: go.generate.fiber
-go.generate.fiber:
+.SILENT: generate.go.rest.fiber
+generate.go.rest.fiber:
 	./scripts/generate-go-server.sh fiber
 
-.SILENT: go.generate
-go.generate: go.generate.echo go.generate.chi go.generate.gin go.generate.gorilla go.generate.fiber
+.SILENT: generate.go.rest
+generate.go.rest: generate.go.rest.echo generate.go.rest.chi generate.go.rest.gin generate.go.rest.gorilla generate.go.rest.fiber
