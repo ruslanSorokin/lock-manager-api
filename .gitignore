@@ -1,0 +1,5 @@
+# vscode IDE config
+.vscode
+
+# macOS
+.DS_Store
