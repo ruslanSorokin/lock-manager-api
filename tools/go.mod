@@ -1,11 +1,11 @@
 module github.com/ruslanSorokin/lock-manager-api/tools
 
-go 1.20
+go 1.19
 
 require github.com/deepmap/oapi-codegen v1.13.0
 
 require (
-	github.com/getkin/kin-openapi v0.117.0 // indirect
+	github.com/getkin/kin-openapi v0.118.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/swag v0.21.1 // indirect
 	github.com/invopop/yaml v0.1.0 // indirect
