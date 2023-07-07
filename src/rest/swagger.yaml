@@ -1,0 +1,186 @@
+openapi: 3.0.0
+info:
+  title: Lock Manager API
+  version: 0.1.0
+servers:
+  - url: http://localhost:9090/api/v1
+    description: Main server
+paths:
+  /locks:
+    post:
+      tags:
+        - Lock
+      summary: >
+        Lock a resource.
+      description: >
+        Creates a new lock with given `resource_id` and returns a token to
+        delete the lock.
+      parameters:
+        - name: resource_id
+          in: query
+          required: true
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/resource_id"
+
+      responses:
+        "201":
+          description: >
+            Lock on the resource was successfully created. You'll get a token
+            that can be used to delete the resource and HATEOAS format links in the response body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    allOf:
+                      - $ref: "#/components/schemas/token"
+                  _links:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        unlock:
+                          type: object
+                          properties:
+                            href:
+                              type: string
+                              format: url
+                              default: http://localhost:9090/api/v1/unlock/{resource_id}
+
+        "400":
+          description: >
+            Lock on the resource was NOT successfully created, because of the invalid
+            parameters of the request. You'll get array of enum errors, that
+            must be fixed to make the request valid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_list:
+                    description: >
+                      Array of enum format errors.
+                    type: array
+                    items:
+                      description: >
+                        Enum format error.
+                      type: string
+                      format: enum
+                      enum:
+                        - INVALID_RESOURCE_ID # resource_id violates one of its constraint
+
+        "409":
+          description: >
+            Lock on the resource was NOT successfully created, because lock on
+            the given resource already exists. You'll get array of enum errors, that
+            must be fixed to make the request valid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_list:
+                    description: >
+                      Array of enum format errors.
+                    type: array
+                    items:
+                      description: >
+                        Enum format error.
+                      type: string
+                      format: enum
+                      enum:
+                        - RESOURCE_ID_ALREADY_EXISTS # resource_id is already locked
+
+  /locks/{resource_id}:
+    delete:
+      tags:
+        - Unlock
+      summary: >
+        Unlock a resource.
+      description: >
+        Removes lock with given `resource_id` only if the token fits.
+      parameters:
+        - name: resource_id
+          in: path
+          required: true
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/resource_id"
+        - name: token
+          in: query
+          required: true
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/token"
+
+      responses:
+        "200":
+          description: >
+            Lock was successfully deleted.
+
+        "400":
+          description: >
+            Lock on the resource was NOT successfully deleted, because of the invalid
+            parameters of the request. You'll get array of enum errors, that
+            must be fixed to make the request valid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_list:
+                    description: >
+                      Array of enum format errors.
+                    type: array
+                    items:
+                      description: >
+                        Enum format error.
+                      type: string
+                      format: enum
+                      enum:
+                        - INVALID_TOKEN # token violates one of its constraint
+                        - WRONG_TOKEN # token doesn't fit
+                        - INVALID_RESOURCE_ID # resource_id violates one of its constraint
+
+        "404":
+          description: >
+            Lock on the resource doesn't exist. You'll get array of enum errors, that
+            must be fixed to make the request valid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_list:
+                    description: >
+                      Array of enum format errors.
+                    type: array
+                    items:
+                      description: >
+                        Enum format error.
+                      type: string
+                      format: enum
+                      enum:
+                        - RESOURCE_ID_NOT_FOUND # resource_id was not found
+
+components:
+  schemas:
+    uuid_v4:
+      type: string
+      format: uuid
+      example: 4d5123dc-d989-11ed-afa1-0242ac120002
+      minLength: 32
+      maxLength: 32
+    resource_id:
+      description: >
+        Resource identifier.
+      allOf:
+        - $ref: "#/components/schemas/uuid_v4"
+    token:
+      description: >
+        Secret token that issued after creating a lock on a resource. Can be
+        used to delete lock on the resource.
+      allOf:
+        - $ref: "#/components/schemas/uuid_v4"
