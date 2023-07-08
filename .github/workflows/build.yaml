@@ -10,19 +10,13 @@ env:
   GO_VERSION: "1.20"
 
 jobs:
-  go-mod:
+  go-mod-diff:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        go: ['stable', 'oldstable']
-
     steps:
       - name: Install Go
         uses: actions/setup-go@v4
         with:
-          go-version: ${{ matrix.go }}
-          check-latest: true
+          go-version: ${{ env.GO_VERSION }}
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -30,7 +24,7 @@ jobs:
       - name: Run [go mod tidy]
         run: |
           go mod tidy
-          git diff --exit-code go.mod
+          git diff --exit-code
 
       - name: Run [go mod download]
         run: |
@@ -40,19 +34,13 @@ jobs:
         run: |
           go mod verify
 
-  go-generate:
+  go-generate-diff:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        go: ['stable', 'oldstable']
-
     steps:
       - name: Install Go
         uses: actions/setup-go@v4
         with:
-          go-version: ${{ matrix.go }}
-          check-latest: true
+          go-version: ${{ env.GO_VERSION }}
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -62,7 +50,7 @@ jobs:
           go generate ./...
           git diff --exit-code
 
-  proto-generate:
+  proto-generate-diff:
     runs-on: ubuntu-latest
     steps:
       - name: Install protoc
@@ -72,7 +60,6 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: ${{ env.GO_VERSION }}
-          check-latest: true
 
       - name: Install Go protoc plugins
         run: |
