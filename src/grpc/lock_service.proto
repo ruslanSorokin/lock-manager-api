@@ -4,6 +4,8 @@ package lock_manager;
 
 import "transport.proto";
 
+option go_package = "github.com/ruslanSorokin/lock-manager-api/gen/go/grpc/proto;proto";
+
 // LockManagerService provides interprocess communication lock functionality.
 service LockManagerService {
   // Lock locks resource and returns token that can be used to unlock it.

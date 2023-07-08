@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package lock_manager;
 
+option go_package = "github.com/ruslanSorokin/lock-manager-api/gen/go/grpc/proto;proto";
+
 // LockReq is a request for Lock call.
 message LockReq{
   // Required.
