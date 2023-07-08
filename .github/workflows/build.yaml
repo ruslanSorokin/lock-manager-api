@@ -62,6 +62,32 @@ jobs:
           go generate ./...
           git diff --exit-code
 
+  proto-generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install protoc
+        uses: arduino/setup-protoc@v2.0.0
+
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          check-latest: true
+
+      - name: Install Go protoc plugins
+        run: |
+          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Generate proto files
+        run: |
+          make generate.go.grpc
+          git diff --exit-code
+
+
   build:
     runs-on: ubuntu-latest
     strategy:
