@@ -48,6 +48,4 @@ message UnlockRes{
     ERR_LOCK_NOT_FOUND = 4;
   }
   repeated Error errors = 1;
-  // Required.
-  optional string token = 2;
 }
