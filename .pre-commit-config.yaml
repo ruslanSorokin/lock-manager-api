@@ -42,4 +42,4 @@ repos:
     rev: v0.45.0
     hooks:
       - id: protolint
-        args: [lint src/grpc]
+        args: [src/grpc]
