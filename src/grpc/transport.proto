@@ -15,10 +15,10 @@ message LockRes{
   // Error is a enum error.
   enum Error{
     ERR_UNSPECIFIED = 0;
-    // ERR_INVALID_RESOURCE_ID means resource_id violates one of its constraint
+    // ERR_INVALID_RESOURCE_ID means that resource_id violates one of its constraint
     ERR_INVALID_RESOURCE_ID = 1;
-    // ERR_RESOURCE_ID_ALREADY_EXISTS means resource_id is already locked
-    ERR_RESOURCE_ID_ALREADY_EXISTS = 2;
+    // ERR_LOCK_ALREADY_EXISTS means that resource_id is already locked
+    ERR_LOCK_ALREADY_EXISTS = 2;
   }
   repeated Error errors = 1;
   // Required.
@@ -38,14 +38,14 @@ message UnlockRes{
   // Error is a enum error.
   enum Error{
     ERR_UNSPECIFIED = 0;
-    // ERR_INVALID_TOKEN means token violates one of its constraint
+    // ERR_INVALID_TOKEN means that token violates one of its constraint
     ERR_INVALID_TOKEN = 1;
-    // ERR_WRONG_TOKEN means token doesn't fit
+    // ERR_WRONG_TOKEN means that token doesn't fit
     ERR_WRONG_TOKEN = 2;
-    // ERR_INVALID_RESOURCE_ID means resource_id violates one of its constraint
+    // ERR_INVALID_RESOURCE_ID means that resource_id violates one of its constraint
     ERR_INVALID_RESOURCE_ID = 3;
-    // ERR_RESOURCE_ID_NOT_FOUND means resource_id was not found
-    ERR_RESOURCE_ID_NOT_FOUND = 4;
+    // ERR_LOCK_NOT_FOUND means that lock with given resource_id was not found
+    ERR_LOCK_NOT_FOUND = 4;
   }
   repeated Error errors = 1;
   // Required.
