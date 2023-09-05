@@ -1,0 +1,55 @@
+version: "3"
+
+includes:
+  tools: tools/Taskfile.yaml
+
+vars:
+  PROTO_SRC_DIR: src/proto
+  PROTO_OUT_DIR: gen/proto
+
+  SWAGGER_SRC_FILE: src/swagger/swagger.yaml
+  SWAGGER_OUT_DIR: gen/swagger
+
+  SWAGGER_GO_ROUTERS: echo,chi,gin,gorilla,fiber
+
+  GO_TOOLS_FILE: tools/tools.go
+
+tasks:
+  go:swagger:clean:
+    vars: { _OUT_DIR: "{{.SWAGGER_OUT_DIR}}/go" }
+    cmd: 'find {{._OUT_DIR}} -iname "*.go" -delete'
+    shopt: ["globstar"]
+
+  go:swagger:gen:
+    requires:
+      vars:
+        - "SWAGGER_GO_ROUTERS"
+        - "SWAGGER_OUT_DIR"
+    vars:
+      SRC_FILE: '{{default "." .SWAGGER_SRC_FILE}}'
+      ROUTERS: "{{.SWAGGER_GO_ROUTERS}}"
+      _OUT_DIR: "{{.SWAGGER_OUT_DIR}}/go"
+    sources: ["{{.SRC_FILE}}/**/*.yaml"]
+    deps: ["go:swagger:clean", "tools:install-tools"]
+    cmds:
+      - for: { var: ROUTERS, split: "," }
+        cmd: SRC_FILE={{.SRC_FILE}} OUT_DIR={{._OUT_DIR}} ROUTER={{.ITEM}} ./script/go/generate-swagger.sh
+
+  go:proto:clean:
+    vars: { _OUT_DIR: "{{.PROTO_OUT_DIR}}/go" }
+    cmd: 'find {{._OUT_DIR}} -iname "*.go" -delete'
+    shopt: ["globstar"]
+
+  go:proto:gen:
+    requires:
+      vars:
+        - "PROTO_OUT_DIR"
+    vars:
+      SRC_DIR: '{{default "." .PROTO_SRC_DIR}}'
+      _OUT_DIR: "{{.PROTO_OUT_DIR}}/go"
+    sources: ["{{.SRC_DIR}}/**/*.proto"]
+    deps: ["go:proto:clean", "tools:install-tools"]
+    cmd: SRC_DIR={{.SRC_DIR}} OUT_DIR={{._OUT_DIR}} ./script/go/generate-proto.sh
+
+  go:gen:
+    deps: ["go:proto:gen", "go:swagger:gen"]
