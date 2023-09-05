@@ -1,0 +1,68 @@
+version: "3"
+
+vars:
+  PROTOC_VERSION: libprotoc 24.2
+
+tasks:
+  check-protoc-version:
+    internal: true
+    deps: ["install-protoc"]
+    vars:
+      _PROTOC_VERSION: { sh: protoc --version }
+      _PREDICATE: "{{contains ._PROTOC_VERSION .PROTOC_VERSION}}"
+    preconditions:
+      - sh: "{{._PREDICATE}}"
+        msg: >
+          Your version is not up to date with one that used in this repo.
+          Please, fix it manually.
+
+          Required version is: {{printf "%s" .PROTOC_VERSION}}
+
+          Your version is: {{printf "%s" ._PROTOC_VERSION}}
+    status:
+      - "{{._PREDICATE}}"
+
+  install-protoc:
+    internal: true
+    preconditions:
+      - sh: '{{or  (eq OS "darwin") (eq OS "linux")}}'
+        msg: "Only implemented for darwin and linux"
+    cmds:
+      - cmd: brew install protobuf
+        platforms:
+          - "darwin"
+      - cmd: apt install -y protobuf-compiler
+        platforms:
+          - "linux"
+    status: ["which protoc"]
+
+  download-tools:
+    internal: true
+    cmd: go mod download
+    run: once
+
+  install-protoc-gen-go:
+    internal: true
+    cmd: go install google.golang.org/protobuf/cmd/protoc-gen-go
+    deps: ["download-tools"]
+    status: ["which protoc-gen-go"]
+
+  install-protoc-gen-go-grpc:
+    internal: true
+    cmd: go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
+    deps: ["download-tools"]
+    status: ["which protoc-gen-go-grpc"]
+
+  install-oapi-codegen:
+    internal: true
+    cmd: go install github.com/deepmap/oapi-codegen/cmd/oapi-codegen
+    deps: ["download-tools"]
+    status: ["which oapi-codegen"]
+
+  install-tools:
+    deps:
+      - "check-protoc-version"
+      - "install-protoc-gen-go"
+      - "install-protoc-gen-go-grpc"
+      - "install-oapi-codegen"
+    desc: Install all tools

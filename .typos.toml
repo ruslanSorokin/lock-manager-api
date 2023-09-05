@@ -1,7 +1,0 @@
-[type.mod]
-extend-glob = ["*.mod"]
-check-file = false
-
-[type.sum]
-extend-glob = ["*.sum"]
-check-file = false
