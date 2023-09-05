@@ -7,13 +7,13 @@ on:
     branches: [main]
 
 env:
-  GO_VERSION: "stable"
+  GO_VERSION: 1.21
 
 jobs:
   go-mod-diff:
     runs-on: ubuntu-latest
     steps:
-      - name: Install Go
+      - name: Install golang
         uses: actions/setup-go@v4
         with:
           go-version: ${{ env.GO_VERSION }}
@@ -21,57 +21,41 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run [go mod tidy]
+      - name: Check for missing dependencies
         run: |
           go mod tidy
           git diff --exit-code
 
-      - name: Run [go mod download]
+      - name: Download dependencies
         run: |
           go mod download
 
-      - name: Run [go mod verify]
+      - name: Verify dependencies
         run: |
           go mod verify
-
-  # go-generate-diff:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Install Go
-  #       uses: actions/setup-go@v4
-  #       with:
-  #         go-version: ${{ env.GO_VERSION }}
-
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
-
-  #     - name: Run [go generate]
-  #       run: |
-  #         go generate ./...
-  #         git diff --exit-code
 
   proto-generate-diff:
     runs-on: ubuntu-latest
     steps:
-      - name: Install protoc
-        uses: arduino/setup-protoc@v2.0.0
-
-      - name: Install Go
+      - name: Install golang
         uses: actions/setup-go@v4
         with:
           go-version: ${{ env.GO_VERSION }}
 
-      - name: Install Go protoc plugins
-        run: |
-          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-          go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+      - name: Install protoc
+        uses: arduino/setup-protoc@v2.0.0
+
+      - name: Install go-task
+        uses: arduino/setup-task@v1
+        with:
+          version: 3.x
 
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Generate proto files
         run: |
-          make generate.go.grpc
+          task go:proto:gen
           git diff --exit-code
 
 
@@ -79,16 +63,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
-      matrix:
-        # go: ['stable', 'oldstable']
-        go: ['stable']
 
     steps:
-      - name: Install Go
+      - name: Install golang
         uses: actions/setup-go@v4
         with:
-          go-version: ${{ matrix.go }}
-          check-latest: true
+          go-version: ${{ env.GO_VERSION }}
 
       - name: Checkout code
         uses: actions/checkout@v3
