@@ -1,11 +1,2 @@
-[type.mod]
-extend-glob = ["**/*.mod"]
-check-file = false
-
-[type.sum]
-extend-glob = ["**/*.sum"]
-check-file = false
-
-[type.gen]
-extend-glob = ["**/gen"]
-check-file = false
+[files]
+extend-exclude = ["**/gen"]
