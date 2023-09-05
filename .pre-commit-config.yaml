@@ -13,7 +13,8 @@ repos:
     rev: v1.13.7
     hooks:
       - id: typos
-        args: [--exclude=go.mod, --exclude=go.sum]
+        args: [--config, .config/.typos.toml]
+        exclude: ".*gen"
 
   # pre-commit install --hook-type commit-msg
   - repo: https://github.com/compilerla/conventional-pre-commit
