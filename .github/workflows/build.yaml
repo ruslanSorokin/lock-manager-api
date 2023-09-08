@@ -6,20 +6,20 @@ on:
   push:
     branches: [main]
 
-env:
-  GO_VERSION: 1.21
-
 jobs:
   go-mod-diff:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Install golang
         uses: actions/setup-go@v4
         with:
-          go-version: ${{ env.GO_VERSION }}
-
-      - name: Checkout code
-        uses: actions/checkout@v4
+          go-version-file: go.mod
+          cache: true
+          cache-dependency-path: |
+            go.sum
 
       - name: Check for missing dependencies
         run: |
@@ -37,10 +37,16 @@ jobs:
   proto-generate-diff:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Install golang
         uses: actions/setup-go@v4
         with:
-          go-version: ${{ env.GO_VERSION }}
+          go-version-file: go.mod
+          cache: true
+          cache-dependency-path: |
+            tools/go.sum
 
       - name: Install protoc
         uses: arduino/setup-protoc@v2.0.0
@@ -48,12 +54,7 @@ jobs:
           version: "24.2"
 
       - name: Install go-task
-        uses: arduino/setup-task@v1
-        with:
-          version: 3.x
-
-      - name: Checkout code
-        uses: actions/checkout@v4
+        run: make install-gotask
 
       - name: Generate proto files
         run: |
@@ -63,17 +64,17 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Install golang
         uses: actions/setup-go@v4
         with:
-          go-version: ${{ env.GO_VERSION }}
-
-      - name: Checkout code
-        uses: actions/checkout@v4
+          go-version-file: go.mod
+          cache: true
+          cache-dependency-path: |
+            go.sum
 
       - name: Build code
         run: go build -v ./...
