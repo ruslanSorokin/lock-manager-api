@@ -9,4 +9,5 @@ includes:
 tasks:
   pre-commit:install-tools:
     deps:
-      - "tools:install-tools"
+      - "tools:install-protoc-gen-go"
+      - "tools:install-protoc-gen-go-grpc"
