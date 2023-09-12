@@ -41,6 +41,12 @@ tasks:
     cmd: go mod download
     run: once
 
+  install-protolint:
+    internal: true
+    cmd: go install github.com/yoheimuta/protolint/cmd/protolint
+    deps: ["download-tools"]
+    status: ["which protolint"]
+
   install-protoc-gen-go:
     internal: true
     cmd: go install google.golang.org/protobuf/cmd/protoc-gen-go
@@ -62,6 +68,7 @@ tasks:
   install-tools:
     deps:
       - "check-protoc-version"
+      - "install-protolint"
       - "install-protoc-gen-go"
       - "install-protoc-gen-go-grpc"
       - "install-oapi-codegen"
