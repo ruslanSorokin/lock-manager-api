@@ -3,7 +3,7 @@ module github.com/ruslanSorokin/lock-manager-api
 go 1.21
 
 require (
-	github.com/getkin/kin-openapi v0.118.0
+	github.com/getkin/kin-openapi v0.120.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/gofiber/fiber/v2 v2.48.0
