@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package lock_manager;
 
+import "google/protobuf/empty.proto";
+
 option go_package = "github.com/ruslanSorokin/lock-manager-api/gen/go/grpc/proto;proto";
 
 // LockReq is a request for Lock call.
@@ -12,7 +14,7 @@ message LockReq{
 
 // LockRes is a response for LockReq.
 message LockRes{
-  // Error is a enum error.
+  // Error is a enum error. Sent in status error message if any.
   enum Error{
     ERR_UNSPECIFIED = 0;
     // ERR_INVALID_RESOURCE_ID means that resource_id violates one of its constraint
@@ -20,9 +22,8 @@ message LockRes{
     // ERR_LOCK_ALREADY_EXISTS means that resource_id is already locked
     ERR_LOCK_ALREADY_EXISTS = 2;
   }
-  repeated Error errors = 1;
   // Required.
-  optional string token = 2;
+  optional string token = 1;
 }
 
 // UnlockReq is a request for Unlock call.
@@ -35,7 +36,7 @@ message UnlockReq{
 
 // UnlockRes is a response for UnlockReq.
 message UnlockRes{
-  // Error is a enum error.
+  // Error is a enum error. Sent in status error message if any.
   enum Error{
     ERR_UNSPECIFIED = 0;
     // ERR_INVALID_TOKEN means that token violates one of its constraint
@@ -47,5 +48,5 @@ message UnlockRes{
     // ERR_LOCK_NOT_FOUND means that lock with given resource_id was not found
     ERR_LOCK_NOT_FOUND = 4;
   }
-  repeated Error errors = 1;
+  google.protobuf.Empty response = 1;
 }
