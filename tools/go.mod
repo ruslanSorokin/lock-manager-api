@@ -3,7 +3,7 @@ module github.com/ruslanSorokin/lock-manager-api/tools
 go 1.21
 
 require (
-	github.com/deepmap/oapi-codegen v1.15.0
+	github.com/deepmap/oapi-codegen v1.16.1
 	github.com/yoheimuta/protolint v0.46.2
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.3.0
 	google.golang.org/protobuf v1.31.0
