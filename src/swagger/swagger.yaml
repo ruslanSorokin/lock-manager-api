@@ -48,50 +48,48 @@ paths:
                               type: string
                               format: url
                               default: http://localhost:9090/api/v1/unlock/{resource_id}
+                            type:
+                              type: string
+                              enum:
+                                - get
+                                - post
+                                - put
+                                - delete
+                              default: delete
 
         "400":
           description: >
             Lock on the resource was NOT successfully created, because of the invalid
-            parameters of the request. You'll get array of enum errors, that
-            must be fixed to make the request valid.
+            parameters of the request. You'll get error in format of predefined enum.
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  error_list:
+                  error:
                     description: >
-                      Array of enum format errors.
-                    type: array
-                    items:
-                      description: >
-                        Enum format error.
-                      type: string
-                      format: enum
-                      enum:
-                        - INVALID_RESOURCE_ID # resource_id violates one of its constraint
+                      Enum format error.
+                    type: string
+                    format: enum
+                    enum:
+                      - INVALID_RESOURCE_ID # resource_id violates one of its constraint
 
         "409":
           description: >
             Lock on the resource was NOT successfully created, because lock on
-            the given resource already exists. You'll get array of enum errors, that
-            must be fixed to make the request valid.
+            the given resource already exists. You'll get error in format of predefined enum.
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  error_list:
+                  error:
                     description: >
-                      Array of enum format errors.
-                    type: array
-                    items:
-                      description: >
-                        Enum format error.
-                      type: string
-                      format: enum
-                      enum:
-                        - RESOURCE_ID_ALREADY_EXISTS # resource_id is already locked
+                      Enum format error.
+                    type: string
+                    format: enum
+                    enum:
+                      - RESOURCE_ID_ALREADY_EXISTS # resource_id is already locked
 
   /locks/{resource_id}:
     delete:
@@ -123,47 +121,37 @@ paths:
         "400":
           description: >
             Lock on the resource was NOT successfully deleted, because of the invalid
-            parameters of the request. You'll get array of enum errors, that
-            must be fixed to make the request valid.
+            parameters of the request. You'll get error in format of predefined enum.
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  error_list:
+                  error:
                     description: >
-                      Array of enum format errors.
-                    type: array
-                    items:
-                      description: >
-                        Enum format error.
-                      type: string
-                      format: enum
-                      enum:
-                        - INVALID_TOKEN # token violates one of its constraint
-                        - WRONG_TOKEN # token doesn't fit
-                        - INVALID_RESOURCE_ID # resource_id violates one of its constraint
+                      Enum format error.
+                    type: string
+                    format: enum
+                    enum:
+                      - INVALID_TOKEN # token violates one of its constraint
+                      - WRONG_TOKEN # token doesn't fit
+                      - INVALID_RESOURCE_ID # resource_id violates one of its constraint
 
         "404":
           description: >
-            Lock on the resource doesn't exist. You'll get array of enum errors, that
-            must be fixed to make the request valid.
+            Lock on the resource doesn't exist. You'll get error in format of predefined enum.
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  error_list:
+                  error:
                     description: >
-                      Array of enum format errors.
-                    type: array
-                    items:
-                      description: >
-                        Enum format error.
-                      type: string
-                      format: enum
-                      enum:
-                        - RESOURCE_ID_NOT_FOUND # resource_id was not found
+                      Enum format error.
+                    type: string
+                    format: enum
+                    enum:
+                      - RESOURCE_ID_NOT_FOUND # resource_id was not found
 
 components:
   schemas:
